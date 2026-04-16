@@ -1,0 +1,44 @@
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  default: standard
+  disable:
+    # Too noisy on idiomatic `defer f.Close()` / tmpfile-cleanup patterns.
+    # Can be enabled incrementally later once the code adopts an error-
+    # handling convention for these sites.
+    - errcheck
+  exclusions:
+    rules:
+      # RIPEMD-160 is intentional: OP_HASH160 in the Bitcoin script
+      # interpreter must compute RIPEMD-160(SHA-256(x)) to preserve
+      # address encoding parity with Bitcoin Core.
+      - path: script/interp\.go
+        linters: [staticcheck]
+        text: SA1019.*ripemd160
+
+      # sighash_domain_test intentionally compares SigHash(tx, 0) to
+      # itself to assert determinism across repeated calls.
+      - path: txn/sighash_domain_test\.go
+        linters: [staticcheck]
+        text: SA4000
+
+      # core/blockchain.go:854 — parentHdr is used on the `parentKnown`
+      # branch and overwritten on the `!parentKnown` branch; the always-
+      # overwritten path is flagged by ineffassign + staticcheck SA4006.
+      # Restructuring hurts clarity.
+      - path: core/blockchain\.go
+        linters: [ineffassign]
+        text: parentHdr
+      - path: core/blockchain\.go
+        linters: [staticcheck]
+        text: SA4006.*parentHdr
+
+      # mempool/estimator.go:607 — curFarBucket is declared before the
+      # loop that always overwrites it on the first iteration; keeping
+      # the decl outside the loop matches the Bitcoin Core port layout.
+      - path: mempool/estimator\.go
+        linters: [ineffassign]
+        text: curFarBucket

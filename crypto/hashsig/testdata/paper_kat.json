@@ -1,0 +1,42 @@
+{
+  "generated_by": "sage dump_katfixtures.sage (BlockstreamResearch/SPHINCS-Parameters)",
+  "n_bytes": 16,
+  "parameter_sets": [
+    {
+      "a": 17,
+      "d": 1,
+      "h": 12,
+      "k": 8,
+      "l": 32,
+      "mmax": 105,
+      "name": "shrimps_compact",
+      "q_s_log2": 10,
+      "scheme": "W+C_P+FP",
+      "security_bits": 128.0,
+      "sig_size_bytes": 2548,
+      "sign_compressions": 6797002,
+      "swn": 240,
+      "t": 1048576,
+      "verify_compressions": 494,
+      "w": 16
+    },
+    {
+      "a": 14,
+      "d": 5,
+      "h": 40,
+      "k": 11,
+      "l": 16,
+      "mmax": 118,
+      "name": "shrimps_fallback",
+      "q_s_log2": 40,
+      "scheme": "W+C_P+FP",
+      "security_bits": 128.0,
+      "sig_size_bytes": 4036,
+      "sign_compressions": 6419013,
+      "swn": 2040,
+      "t": 180224,
+      "verify_compressions": 10559,
+      "w": 256
+    }
+  ]
+}
