@@ -19,7 +19,7 @@ This page is the one-pager. The rest of `docs/` goes deep. The full module map l
 | Address | 2-leaf Pay-to-Merkle-Root: leaf 0 = SHRINCS pubkey, leaf 1 = SHRIMPS pubkey |
 | Wallet derivation | BIP-39 mnemonic + BIP-32 hardened HMAC-SHA512 + BIP-44 path `m/44'/1'/N'/{0',1'}` |
 | Storage | `cockroachdb/pebble` |
-| P2P | libp2p (TCP + QUIC, Noise XX, mplex) |
+| P2P | raw TCP, Bitcoin-exact `CMessageHeader` framing (magic + 12-byte command + length + SHA256d checksum) |
 | RPC | HTTP + Bitcoin Core-style Basic auth (cookie by default, `-rpcuser`/`-rpcpassword` optional). `qbitcoind` + `qbitcoin-cli` mirror `bitcoind` / `bitcoin-cli` UX. No TLS. |
 | Address encoding | bech32 (`btcutil/bech32`) |
 
@@ -63,7 +63,7 @@ So: SHA-256d is fine for PoW, TxID, Merkle, address commitments. ECDSA / Schnorr
 | `txn/` | Tx, UTXO, sighash, sigops cost |
 | `core/` | Block header, PoW, Bitcoin-exact 2016-block retarget, blockchain with reorg, undo records, orphan pool, genesis |
 | `mempool/` | RBF-aware pool, `MinRelayFeeRate`, BIP-125 subset, Core-port `BlockPolicyEstimator` (estimateSmartFee) |
-| `p2p/` | libp2p host, `/qbitcoin/1.0.0` protocol, Bitcoin-shaped peer / handshake / ban manager, BIP-152 compact blocks |
+| `p2p/` | Raw TCP transport, Bitcoin `CMessageHeader` framing, Bitcoin-shaped peer / handshake / ban manager, BIP-152 compact blocks |
 | `storage/` | Pebble wrapper with bucket-prefixed keys |
 | `wallet/` | Multi-wallet registry (Bitcoin-Core style), AES-256-GCM at-rest encryption, BIP-32 hardened HMAC-SHA512, account / address management |
 | `cmd/qbitcoind/` | Node entrypoint — chain + P2P + RPC + optional miner |

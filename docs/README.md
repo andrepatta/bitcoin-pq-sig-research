@@ -43,7 +43,7 @@ If you want the math behind the SHRINCS/SHRIMPS sizes, see [research/](research/
 | [architecture/txn.md](architecture/txn.md) | `txn/` — Tx layout, sighash construction, UTXO set |
 | [architecture/core.md](architecture/core.md) | `core/` — block header, PoW, difficulty (Bitcoin-exact 2016-block retarget), reorgs, genesis |
 | [architecture/mempool.md](architecture/mempool.md) | `mempool/` — relay policy, BIP-125 RBF subset, fee estimator (Core port) |
-| [architecture/p2p.md](architecture/p2p.md) | `p2p/` — libp2p transport, protocol framing, handshake, BIP-152 compact blocks, ban manager |
+| [architecture/p2p.md](architecture/p2p.md) | `p2p/` — raw TCP transport, Bitcoin CMessageHeader framing, handshake, BIP-152 compact blocks, ban manager |
 | [architecture/storage.md](architecture/storage.md) | `storage/` — Pebble bucket layout |
 | [architecture/wallet.md](architecture/wallet.md) | `wallet/` — multi-wallet registry, AES-GCM at-rest encryption, BIP-32 hardened KDF |
 | [architecture/rpc.md](architecture/rpc.md) | `cmd/qbitcoind` HTTP RPC + `cmd/qbitcoin-cli` |

@@ -70,9 +70,9 @@ Higher security levels (NIST L3 = 192 bits, L5 = 256 bits) exist in the paper's 
 
 ## 6. What the chain *does not* defend against
 
-Some quantum-relevant exposure remains in the transport layer (libp2p Noise XX with X25519 ephemeral key agreement, Ed25519 peer identity). See [`../architecture/p2p.md`](../architecture/p2p.md) §2 for the full discussion. Two practical implications:
+The transport layer is plain TCP with **no encryption and no peer-identity authentication** — Bitcoin Core's native shape. See [`../architecture/p2p.md`](../architecture/p2p.md) §2 for details. Practical implications:
 
-- **Store-now-decrypt-later**: a CRQC attacker recording today's gossip traffic can decrypt it once they have a working machine. Mitigated by: chain artifacts (blocks, txs) are PQ-signed, so confidentiality of *historical gossip* is the only loss — not authenticity of past transactions.
-- **Peer-ID forgery**: a CRQC could forge libp2p PeerIDs at replay time. Cannot forge valid blocks or transactions; can only confuse peer discovery / connection accounting.
+- **No transport confidentiality, classical or quantum.** Anyone on the wire can read gossip traffic today. There is nothing for a future CRQC adversary to decrypt that they couldn't already read. We trade transport secrecy for protocol simplicity and Bitcoin parity.
+- **No peer-identity unforgeability.** Nodes are identified by `ip:port`, not by a cryptographic key. An attacker on-path can pretend to be any peer. They still cannot forge blocks or transactions — those are PQ-signed at the chain layer.
 
-Neither breaks consensus. Both will be addressed when libp2p ships a stable PQ-safe `KeyType` and an ML-KEM-hybrid Noise variant upstream.
+Neither weakness touches consensus. The PQ defense in this project is the signature scheme, deliberately not the transport.

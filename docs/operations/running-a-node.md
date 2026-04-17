@@ -29,20 +29,20 @@ qbitcoind \
     -datadir   ~/.qbitcoin \
     -port      8333 \
     -rpc       8334 \
-    -bootnodes /ip4/x.y.z.w/tcp/8333/p2p/12D3KooW... \
+    -bootnodes x.y.z.w:8333 \
     -log       info,p2p=debug,wallet=warn \
     -log-json
 ```
 
 | Flag | Default | Notes |
 |---|---|---|
-| `-datadir` | `~/.qbitcoin` | Pebble DB + `wallets/` + `p2p.key` + `fee_estimates.dat` all live here. |
-| `-port` | 8333 | libp2p listen. Multiaddrs printed on startup. |
+| `-datadir` | `~/.qbitcoin` | Pebble DB + `wallets/` + `fee_estimates.dat` all live here. |
+| `-port` | 8333 | TCP listen port for the qbitcoin wire protocol. The bound `host:port` is printed on startup. |
 | `-rpc` | 8334 | HTTP RPC listen port. |
 | `-rpcbind` | `127.0.0.1` | RPC listen address. Set `0.0.0.0` to expose on all interfaces. |
 | `-rpcuser` / `-rpcpassword` | empty | Static RPC Basic auth. Both must be set; disables the cookie. |
-| `-bootnodes` | hardcoded list | Comma-separated multiaddrs. `none` to disable. |
-| `-connect` | empty | Extra explicit dials (additive to `-bootnodes`). |
+| `-bootnodes` | hardcoded list | Comma-separated `host:port` entries. `none` to disable. |
+| `-connect` | empty | Extra explicit `host:port` dials (additive to `-bootnodes`). |
 | `-log` | `info` | Format: `<default>[,<module>=<level>]…`. Modules: `p2p`, `wallet`, `core`, `mempool`, `crypto`. Levels: `debug` / `info` / `warn` / `error`. |
 | `-log-json` | false | JSON log lines instead of human-readable. |
 | `-daemon` | false | Re-exec detached from the terminal; stdio goes to `<datadir>/qbitcoind.log`. Parent prints the child pid and exits. |
@@ -272,11 +272,12 @@ Modules: `p2p`, `wallet`, `core`, `mempool`, `crypto`, `rpc`. Levels: `debug`, `
 ```
 <datadir>/
   qbitcoin.db/           Pebble store (blocks, headers, utxos, peers, bans, …)
-  p2p.key                libp2p Ed25519 identity (auto-generated on first boot)
   .cookie                RPC auth cookie (0600, regenerated on every boot, removed on clean shutdown)
   fee_estimates.dat      BlockPolicyEstimator state (saved on SIGINT/SIGTERM + every 10 min)
   wallets/<name>/        per-wallet data (see ../architecture/wallet.md §8)
   wallets.autoload       newline-separated wallet names re-loaded on boot
 ```
+
+There is no transport-layer identity key — peers are just `ip:port` endpoints.
 
 Backup the `wallets/<name>/` dir + the wallet's BIP-39 mnemonic. The Pebble DB is reproducible from genesis + peer sync (`<datadir>/qbitcoin.db` is just a chain cache).

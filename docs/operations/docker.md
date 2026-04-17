@@ -1,6 +1,6 @@
 # Docker testbed
 
-Local network of N qBitcoin nodes, with `node-0` as the bootnode and `node-1..node-N` as peers that auto-discover its multiaddr at startup. The compose file is generated, not hand-edited — re-run the generator whenever you change topology.
+Local network of N qBitcoin nodes, with `node-0` as the bootnode and `node-1..node-N` as peers that dial it at `node-0:8333` over the compose network's DNS. The compose file is generated, not hand-edited — re-run the generator whenever you change topology.
 
 ---
 
@@ -37,9 +37,9 @@ docker compose down -v               # the -v drops volumes — fresh chain next
 
 | Role | What happens |
 |---|---|
-| `bootnode` | Tees logs through `tee /tmp/node.log`, scrapes the `p2p listen: …/p2p/<peerid>` line, writes `/dns4/<host>/tcp/8333/p2p/<peerid>` to a shared `bootstrap_addr` volume. Starts with `--bootnodes none`. Creates a wallet + mines. |
-| `peer-mine` | Waits on `/bootstrap/bootnode.addr`, then starts with `--bootnodes <addr>`. Owns its wallet + mines. |
-| `peer` | Stateless validator. Waits on the bootstrap addr, has no wallet, doesn't mine. |
+| `bootnode` | Starts with `--bootnodes none`. Creates a wallet + mines. Other containers dial it at `node-0:8333` (compose DNS); no shared-volume address handoff is needed. |
+| `peer-mine` | Starts with `--bootnodes node-0:8333`. Owns its wallet + mines. |
+| `peer` | Stateless validator. Starts with `--bootnodes node-0:8333`, has no wallet, doesn't mine. |
 
 Wallets in the testbed are unencrypted + autoload so containers restart without passphrase prompts.
 
@@ -61,7 +61,7 @@ The generator maps each node's RPC to a unique host port:
 
 So `qbitcoin-cli -rpc http://localhost:8336 getblockcount` queries node-2. Because the cookie lives inside each container's volume (not on the host), from-the-host calls need either `-rpcuser`/`-rpcpassword` (set via `-rpcuser`/`-rpcpassword` env on the container) or a cookie copied out of the volume. The natural pattern is `docker compose exec node-N qbitcoin-cli -datadir /data …` (shown in §5), which stays inside the container and finds the cookie automatically.
 
-P2P traffic stays inside the compose network — no host port-mapping for libp2p ports.
+P2P traffic stays inside the compose network by default — no host port-mapping for the qbitcoin TCP port. `node-0` does map host `8333` for outside dialers (e.g. a real node on your laptop).
 
 ---
 

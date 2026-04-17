@@ -12,8 +12,8 @@ const (
     BucketHeaders = "headers"  // [32]byte hash → serialized BlockHeader
     BucketUTXOs   = "utxos"    // [32]byte txid || [4]byte index → serialized UTXOEntry
     BucketMeta    = "meta"     // "best_hash", "best_height", "total_work"
-    BucketPeers   = "peers"    // peer_id_multihash → serialized PeerRecord
-    BucketBans    = "bans"     // peer_id_multihash → serialized BanEntry
+    BucketPeers   = "peers"    // 18-byte NetAddr (IPv4-mapped IPv6 + BE port) → 18 B addr + 8 B last-seen unix
+    BucketBans    = "bans"     // canonical IP string bytes → serialized BanEntry
     BucketWallet  = "wallet"   // legacy single-wallet keys (multi-wallet uses files under <datadir>/wallets/)
     BucketWork    = "work"     // [32]byte block hash → cumulative work (big.Int bytes)
     BucketUndo    = "undo"     // [32]byte block hash → serialized undo record for reorgs

@@ -17,7 +17,7 @@ The project exists to make the cost of a PQ-sig transition for Bitcoin concretel
 | Address | 2-leaf Pay-to-Merkle-Root (P2MR): leaf 0 = SHRINCS pubkey, leaf 1 = SHRIMPS pubkey |
 | Wallet derivation | BIP-39 mnemonic + BIP-32 hardened HMAC-SHA512 + BIP-44 path `m/44'/1'/N'/{0',1'}` |
 | Storage | `cockroachdb/pebble` |
-| P2P | libp2p (TCP + QUIC, Noise XX, mplex), `/qbitcoin/1.0.0` protocol |
+| P2P | raw TCP, Bitcoin-exact `CMessageHeader` framing (magic + 12-byte command + length + SHA256d checksum) |
 | RPC | plain HTTP, `qbitcoind` + `qbitcoin-cli`, mirrors `bitcoind` / `bitcoin-cli` UX |
 | Address encoding | bech32 (`btcutil/bech32`) |
 
@@ -89,7 +89,7 @@ qbitcoin/
 ├── txn/                  Tx layout, sighash + chain-ID binding, UTXO set, sigops cost
 ├── core/                 block header, PoW, 2016-block retarget, blockchain, reorg, undo, orphan, genesis
 ├── mempool/              relay policy, BIP-125 RBF subset, BlockPolicyEstimator
-├── p2p/                  libp2p host, /qbitcoin/1.0.0 framing, handshake / ban / peer manager, BIP-152 compact blocks
+├── p2p/                  raw TCP transport, Bitcoin CMessageHeader framing, handshake / ban / peer manager, BIP-152 compact blocks
 ├── storage/              Pebble wrapper with bucket-prefixed keys
 ├── wallet/               multi-wallet registry, AES-GCM at-rest encryption, BIP-32 hardened HMAC-SHA512
 ├── logging/              module-tagged slog wrapper

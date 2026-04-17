@@ -123,8 +123,8 @@ func FuzzDecodeBlockTxn(f *testing.F) {
 }
 
 // FuzzReadFrame hammers the framer itself — magic/checksum/length gates
-// are attacker-controlled and were the most expressive attack surface
-// under libp2p (no framer there), so they're the priority now.
+// are the first thing an attacker-controlled byte stream hits, so
+// they're the priority attack surface.
 func FuzzReadFrame(f *testing.F) {
 	var buf bytes.Buffer
 	_ = WriteFrame(&buf, CmdVersion, EncodeVersion(1, 0, NetAddr{}, 0, [32]byte{}))

@@ -11,13 +11,13 @@ The node (`qbitcoind`) serves an HTTP RPC on `--rpc` port (default 8334), gated 
 | Flag | Default | Purpose |
 |---|---|---|
 | `-datadir` | `~/.qbitcoin` | Pebble + wallet directory. |
-| `-port` | 8333 | libp2p listen port. |
+| `-port` | 8333 | TCP listen port for the qbitcoin wire protocol. |
 | `-rpc` | 8334 | HTTP RPC listen port. |
 | `-rpcbind` | `127.0.0.1` | RPC listen address. `0.0.0.0` exposes on all interfaces (needed for docker port mapping). |
 | `-rpcuser` | empty | Static RPC Basic auth user. When set, `-rpcpassword` must also be set; disables the cookie file. |
 | `-rpcpassword` | empty | Static RPC Basic auth password. Pair with `-rpcuser`. |
-| `-bootnodes` | `DefaultBootnodes` | Comma-separated multiaddrs. `none` disables. |
-| `-connect` | empty | Extra multiaddrs to dial at startup. |
+| `-bootnodes` | `DefaultBootnodes` | Comma-separated `host:port` entries. `none` disables. |
+| `-connect` | empty | Extra `host:port` to dial at startup. |
 | `-log` | `info` | Log spec — e.g. `"info,p2p=debug,wallet=warn"`. |
 | `-log-json` | false | Emit JSON log lines instead of human-readable. |
 | `-daemon` | false | Re-exec detached from the terminal (`setsid` + stdio → `<datadir>/qbitcoind.log`), print `pid`, exit parent. Matches `bitcoind -daemon`. A sentinel env var (`QBITCOIND_DAEMONIZED`) guards against re-fork in the child. |

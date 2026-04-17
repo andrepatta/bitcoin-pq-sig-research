@@ -84,12 +84,11 @@ The order modules need to be built, read, or reasoned about in. Each row depends
 | 17a | `mempool/feerate.go` | nothing (constants + helpers) |
 | 17b | `mempool/mempool.go` | `txn/`, `core/`, `feerate.go` |
 | 17c | `mempool/estimator.go`, `estimator_persist.go` | `mempool/`, `txn/` |
-| 18 | `p2p/messages.go` | `core/`, `txn/`, `crypto/` |
-| 18b | `p2p/identity.go` | libp2p core/crypto only |
+| 18 | `p2p/messages.go` | `core/`, `txn/`, `crypto/` (Bitcoin `CMessageHeader` framer + payload codecs) |
 | 18c | `p2p/bootnodes.go` | nothing (string list) |
-| 18d | `p2p/banman.go` | `storage/`, stdlib `time` |
-| 19 | `p2p/peer.go` | `messages.go`, `identity.go`, libp2p |
-| 20 | `p2p/node.go` | `peer.go`, `core/`, `mempool/`, `banman.go`, libp2p host |
+| 18d | `p2p/banman.go` | `storage/`, stdlib `net`, `time` |
+| 19 | `p2p/peer.go` | `messages.go`, stdlib `net` (one `net.Conn` per peer) |
+| 20 | `p2p/node.go` | `peer.go`, `core/`, `mempool/`, `banman.go`, stdlib `net` (`net.Listen`/`net.Dialer`) |
 | 21 | `wallet/mnemonic.go` | `crypto/hash.go`, `tyler-smith/go-bip39` |
 | 22 | `wallet/store.go`, `encrypt.go` | stdlib `crypto/aes`, `crypto/cipher`, `crypto/pbkdf2` |
 | 23 | `wallet/state_io.go` | `wallet/store.go`, `crypto/state_file.go` |
@@ -118,7 +117,7 @@ The numbering is not a Go build order (Go builds bottom-up automatically) — it
 | [txn.md](txn.md) | Tx layout, sighash + chain-ID binding, UTXO set, sigops cost |
 | [core.md](core.md) | Block header, PoW, Bitcoin-exact difficulty retarget, blockchain, reorg atomicity, undo records, orphan pool, genesis |
 | [mempool.md](mempool.md) | Conflict tracking, BIP-125 RBF subset, min-relay, BlockPolicyEstimator |
-| [p2p.md](p2p.md) | libp2p host, `/qbitcoin/1.0.0` framing, handshake / ban / peer manager, BIP-152 compact blocks |
+| [p2p.md](p2p.md) | Raw TCP transport, Bitcoin `CMessageHeader` framing, handshake / ban / peer manager, BIP-152 compact blocks |
 | [storage.md](storage.md) | Pebble bucket layout |
 | [wallet.md](wallet.md) | Multi-wallet registry, AES-GCM encryption, BIP-32 hardened KDF, account / address management, signing flow |
 | [rpc.md](rpc.md) | `qbitcoind` HTTP RPC + `qbitcoin-cli` UX |

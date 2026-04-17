@@ -339,9 +339,9 @@ func (n *Node) SelfAddrs() []string {
 // Connect dials a peer by host:port and performs the handshake. DNS
 // names are resolved via net.Dialer.
 func (n *Node) Connect(addr string) error {
-	// Normalize: accept plain "host:port" — anything with a /p2p/ or
-	// multiaddr prefix is rejected so stale configs fail loudly rather
-	// than silently losing a dial.
+	// Accept plain "host:port" only. SplitHostPort rejects anything
+	// else (empty host, missing port, garbage), so stale dial strings
+	// fail loudly rather than silently losing a dial.
 	host, portStr, err := net.SplitHostPort(addr)
 	if err != nil {
 		return fmt.Errorf("parse addr %q: %w", addr, err)
